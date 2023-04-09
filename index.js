@@ -14,6 +14,8 @@ const app=express();
 
 //MiddleWare
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // Route
 app.use("/api/user", userRoute);
