@@ -1,12 +1,18 @@
 const router=require("express").Router();
-const {createPost}=require("../controller/PostController")
+const {createPost,likeAndDislike}=require("../controller/PostController")
 const auth=require("../middleware/authMiddleware")
 
-// @route     /api/user
-// @desc       creating user
-// access     public
+// @route     /api/post
+// @desc       creating psot
+// access     private
 
 router.post("/",auth,createPost)
+
+// @route     /api/post/:id
+// @desc       like and dislike post
+// access      private
+
+router.get("/:id",auth,likeAndDislike)
 
 
 
