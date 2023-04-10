@@ -6,7 +6,7 @@ const auth=require("../middleware/authMiddleware")
 // @desc       creating user
 // access     public
 
-router.get("/",auth,createPost)
+router.post("/",auth,createPost)
 
 
 
