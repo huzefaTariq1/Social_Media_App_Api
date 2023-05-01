@@ -98,7 +98,55 @@ const loginUser = async (req, res) => {
 }
 
 
+
+const followAndUnFollow=async(req,res)=>{
+  try {
+
+    const userToFollow=await User.findById(req.params.id);
+    const currentUser=await User.findById(req.user.id);
+
+    
+    if (currentUser.following.includes(req.params.id)){
+      console.log("undollow")
+      const userToFollowIndex=currentUser.following.indexOf(req.params.id);
+      const currentUserIndex=userToFollow.followers.indexOf(req.user.id);
+
+      currentUser.following.splice(userToFollowIndex,1);
+      userToFollow.followers.splice(currentUserIndex,1);
+
+      await userToFollow.save();
+      await currentUser.save();
+
+      return res.status(200).json({
+        success:true,
+        message:"UnFollow User"
+      })
+
+    }
+
+  
+    currentUser.following.push(req.params.id);
+    userToFollow.followers.push(req.user.id);
+    await currentUser.save();
+    await userToFollow.save();
+
+    res.status(200).json({
+      success:true,
+      message:"Follow User"
+    })
+  
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
+
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  followAndUnFollow
 }
