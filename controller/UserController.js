@@ -206,11 +206,58 @@ const changePassword=async(req,res)=>{
   }
 }
 
+const getMe=async(req,res)=>{
+  try {
+    const user = await User.findById(req.user.id).populate(
+      "posts followers following"
+    );
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+
+const getUserProfile=async(req,res)=>{
+  try {
+    const user = await User.findById(req.params.id).populate(
+      "posts followers following"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 
 module.exports = {
   createUser,
   loginUser,
   followAndUnFollow,
   logOut,
-  changePassword
+  changePassword,
+  getMe,
+  getUserProfile
 }

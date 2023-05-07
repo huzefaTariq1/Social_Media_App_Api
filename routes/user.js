@@ -3,7 +3,9 @@ const {createUser,
     loginUser, 
     followAndUnFollow,
     logOut,
-    changePassword}=require("../controller/UserController");
+    changePassword,
+    getMe,
+    getUserProfile}=require("../controller/UserController");
 const auth = require("../middleware/authMiddleware");
 
 // @route     /api/user
@@ -22,12 +24,25 @@ router.post("/login",loginUser);
 // access     public
 router.get("/logout",logOut)
 
+// @route     /api/user/getme
+// @desc      getting all details of current login user  
+// access     private
+router.get("/getme",auth,getMe)
+
+// @route     /api/user/update/password
+// @desc      change password 
+// access     private
 router.put("/update/password",auth,changePassword)
 
 // @route     /api/user/follow/:id
 // @desc      follow And unfollow users
 // access     private
 router.get("/follow/:id",auth,followAndUnFollow);
+
+// @route     /api/user/getuser/:id
+// @desc      getting data of user's profile
+// access     private
+router.get("/getuser/:id",auth,getUserProfile)
 
 
 module.exports = router;
