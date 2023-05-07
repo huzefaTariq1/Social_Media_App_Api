@@ -163,9 +163,54 @@ const logOut=async(req,res)=>{
 }
 
 
+const changePassword=async(req,res)=>{
+  try {
+   
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide old and new password",
+      });
+    }
+
+    const user = await User.findById(req.user.id).select("+password");
+
+       // comaparing password
+       const isMatch = await bcrypt.compare(oldPassword, user.password);
+       if (!isMatch) {
+        console.log(isMatch)
+         return res
+           .status(400)
+           .json({
+             success: false,
+             message: "Old password is InCorrect"
+           });
+       }
+
+       user.password = newPassword;
+       await user.save();
+   
+       res.status(200).json({
+         success: true,
+         message: "Password Updated",
+       });
+    
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+
 module.exports = {
   createUser,
   loginUser,
   followAndUnFollow,
-  logOut
+  logOut,
+  changePassword
 }
