@@ -75,9 +75,41 @@ const likeAndDislike = async (req, res) => {
       message: error.message
     })
   }
-}
+  }
+
+  const getFollowingPosts = async (req, res) => {
+
+    try {
+   
+      const user=await User.findById(req.user.id)
+
+      
+
+      const posts = await Post.find({
+        owner: {
+          $in: user.following,
+        },
+      }).populate("owner")
+
+      res.status(200).json({
+        success:true,
+        posts:posts.reverse()
+      })
+
+    
+  
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message
+      })
+    }
+  
+  }
 
 module.exports = {
   createPost,
-  likeAndDislike
+
+  likeAndDislike,
+  getFollowingPosts
 }
